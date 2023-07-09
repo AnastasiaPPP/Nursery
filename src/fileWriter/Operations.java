@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Operations {
+    FileOperations fileOp = new FileOperations("pets.txt");
 
     public void learnCommand(int lineToChange) {
-        FileOperations fileOp = new FileOperations("pets.txt");
         List<String> linesFromFile = fileOp.readAllLines();
         Scanner scanner = new Scanner(System.in);;
         System.out.print("Новая команда: ");
@@ -25,21 +25,12 @@ public class Operations {
             e.printStackTrace();
         }
     }
-    public static void deleteNote(int number) {
-        List<String[]> l = new ArrayList<>();
-        int lines = 0;
-        try (BufferedReader csvFile = new BufferedReader(new FileReader("pets.txt"))) {
-            String line;
-            while ((line = csvFile.readLine()) != null) {
-                l.add(line.split(" "));
-                lines++;
-            }
+    public void deleteNote(int number) {
+        List<String> l = fileOp.readAllLines();
             l.remove(number - 1);
-            try (BufferedWriter csvWriter = new BufferedWriter(new FileWriter("pets.txt"))) {
-                for (int i = 0; i < lines - 1; i++) {
-                    csvWriter.write((i + 1) + " " + l.get(i)[1] + " " + l.get(i)[2] + " " + l.get(i)[3]);
-                    csvWriter.newLine();
-                }
+        try (FileWriter file = new FileWriter("pets.txt")) {
+            for (String row : l) {
+                file.write(String.join(" ", row) + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
